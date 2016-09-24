@@ -1,0 +1,19 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=60:69:6A:77:E7:5F:10:69:34:7C:4D:07:B4:67:25:21:89:D0:14:FD%3Borg.underpressureapps.unpokemon
+
+    You can also add your credentials to an existing key, using this line:
+    60:69:6A:77:E7:5F:10:69:34:7C:4D:07:B4:67:25:21:89:D0:14:FD;org.underpressureapps.unpokemon
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"AIzaSyDFxWoJDvErXGGOYpLnt6uBy8SrHOIvUNY
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false"> AIzaSyDFxWoJDvErXGGOYpLnt6uBy8SrHOIvUNY</string>
+</resources>
