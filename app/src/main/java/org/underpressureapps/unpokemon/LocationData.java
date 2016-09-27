@@ -19,32 +19,26 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocationData extends AppCompatActivity {
-    private ProgressDialog pDialog;
-    private static String TAG = "elTag";
-    private List<Location> pokeLocation;
-    private static Context context;
+public class LocationData extends AsyncTask<Void,Void,List<Location>> {
 
-    /*// JSON
-    public boolean verificarRed(){
-        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()){
-            //Toast.makeText(this,"Network is available",Toast.LENGTH_LONG).show();
-            return true;
-        } else {
-            Toast.makeText(this,"Network is not available",Toast.LENGTH_LONG)
-                    .show();
-            return false;
-        }
-    }*/
+    private MapsActivity mapActivity;
 
-    protected static String getData(){
-        Log.d(TAG,"get");
+    public LocationData(MapsActivity mapActivity) {
+        this.mapActivity = mapActivity;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
+
+    @Override
+    protected List<Location> doInBackground(Void... voids) {
+
         String response = null;
         try {
             URL url = null;
-            url = new URL("http://190.144.171.172/function.php?lat=11.0199414&lng=-74.8487154");
+            url = new URL("http://190.144.171.172/function3.php?lat=11.0199414&lng=-74.8487154");
             URLConnection yt = url.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     yt.getInputStream()));
@@ -54,53 +48,31 @@ public class LocationData extends AppCompatActivity {
                 response = inputLine;
             }
             in.close();
-            return response;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+        List<Location> pokeLocation = new ArrayList<Location>();
+        if (response != null){
+            try {
+                JSONArray usuarios = new JSONArray(response);
 
-    }
-    private class GetData extends AsyncTask<Void,Void,Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //pDialog = new ProgressDialog(MainActivity.this);
-            //pDialog.setMessage("Please wait...");
-            //pDialog.setCancelable(false);
-            //pDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            String response = getData();
-            pokeLocation = new ArrayList<Location>();
-            if (response != null){
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray usuarios = jsonObject.getJSONArray("results");
-                    Log.d(TAG,"response " + usuarios.length());
-                    for (int i = 0; i < usuarios.length(); i++){
-                        JSONObject c = usuarios.getJSONObject(i);
-                        JSONObject location = c.getJSONObject("");
-                        pokeLocation.add(new Location(location.getDouble("lt"), location.getDouble("lng")));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                for (int i = 0; i < usuarios.length(); i++){
+                    JSONObject location = usuarios.getJSONObject(i);
+                    pokeLocation.add(new Location(location.getDouble("lt"), location.getDouble("lng")));
                 }
-            } else {
-                Log.d(TAG,"response is null");
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            return null;
-        }
+        } else {
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (pDialog.isShowing())
-                pDialog.dismiss();
         }
+        return pokeLocation;
+    }
+
+    @Override
+    protected void onPostExecute(List<Location> aVoid) {
+        super.onPostExecute(aVoid);
+        mapActivity.pokeLocations(aVoid);
     }
 }
